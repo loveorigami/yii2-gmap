@@ -34,7 +34,7 @@ yii.googleMapManager = (function ($) {
          */
         getAddress: function (location, htmlContent, loadMap) {
             pub.drawMarker(location.position, htmlContent);
-            pub.delay = 300;
+            pub.delay = 0;
             loadMap();
         },
         updatePosition: function (position) {

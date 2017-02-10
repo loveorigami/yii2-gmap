@@ -25,7 +25,7 @@ to the require section of your composer.json.
 Usage
 -----
 
-To use GoogleMaps, you need to configure its [[userLocations]] property. For example:
+To use GoogleMaps, you need to configure its [[locations]] property. For example:
 
 ```php
 echo lo\widgets\gmap\GoogleMaps::widget([

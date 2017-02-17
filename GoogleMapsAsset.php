@@ -11,20 +11,25 @@ use yii\web\AssetBundle;
  */
 class GoogleMapsAsset extends AssetBundle
 {
-
     /**
      * @var array
      */
     public $js = [
-        'markerclusterer_compiled.js',
-        'googlemap.js',
+        'gmap3.js',
+    ];
+
+    /**
+     * @var array
+     */
+    public $css = [
+        'gmap3.css',
     ];
 
     /**
      * @var array
      */
     public $depends = [
-        'yii\web\YiiAsset',
+        'lo\widgets\gmap\Gmap3Asset',
     ];
 
     /**

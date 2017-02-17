@@ -13,24 +13,15 @@ use yii\web\View;
 /**
  * GoogleMaps displays a set of user addresses as markers on the map.
  *
- * To use GoogleMaps, you need to configure its [[locations]] property. For example:
+ * To use GoogleMaps, you need to configure its [[data]] property. For example:
  *
  * ```php
  * echo yii2mod\google\maps\markers\GoogleMaps::widget([
- *     'locations' => [
+ *     'data' => [
  *           [
- *               'location' => [
- *                   'address' => 'Kharkov',
- *                   'country' => 'Ukraine',
- *               ],
- *               'htmlContent' => '<h1>Kharkov</h1>'
- *           ],
- *           [
- *               'location' => [
- *                   'city' => 'New York',
- *                   'country' => 'Usa',
- *               ],
- *               'htmlContent' => '<h1>New York</h1>'
+ *              'position' => [$model->lat, $model->lng],
+ *              'open' => $model->id == $this->objectId,
+ *              'content' => $model->name,
  *           ],
  *     ]
  * ]);
@@ -39,9 +30,9 @@ use yii\web\View;
 class GoogleMaps extends Widget
 {
     /**
-     * @var array user locations array
+     * @var array data locations
      */
-    public $locations = [];
+    public $data = [];
 
     /**
      * @var string main wrapper height
@@ -68,38 +59,10 @@ class GoogleMaps extends Widget
     public $googleMapsOptions = [];
 
     /**
-     * Example listener for infowindow object:
-     *
-     * ```php
-     * [
-     *    [
-     *       'object' => 'infowindow',
-     *       'event' => 'domready',
-     *       'handler' => (new \yii\web\JsExpression('function() {
-     *              // your custom js code
-     *        }'))
-     *    ]
-     * ]
-     * ```
-     *
-     * @var array google map listeners
-     */
-    public $googleMapsListeners = [];
-
-    /**
      * @see https://developers.google.com/maps/documentation/javascript/reference#InfoWindowOptions
      * @var array
      */
     public $infoWindowOptions = [];
-
-    /**
-     * @see https://github.com/googlemaps/js-marker-clusterer
-     * @var array
-     */
-    public $markerClustererOptions = [
-        'gridSize' => 50,
-        'maxZoom' => 17
-    ];
 
     /**
      * @var string google maps container id
@@ -107,15 +70,10 @@ class GoogleMaps extends Widget
     public $containerId = 'map_canvas';
 
     /**
-     * @var bool render empty map, if locations is empty. Defaults to 'true'
+     * @var bool render empty map, if data is empty. Defaults to 'true'
      */
     public $renderEmptyMap = true;
 
-    /**
-     * Json array for yii.googleMapManager with users address and html contents
-     * @var array
-     */
-    protected $geocodeData = [];
 
     /**
      * Init widget
@@ -123,11 +81,10 @@ class GoogleMaps extends Widget
     public function init()
     {
         parent::init();
-        if (is_array($this->locations) === false) {
-            throw new InvalidConfigException('The "locations" property must be of the type array');
+        if (is_array($this->data) === false) {
+            throw new InvalidConfigException('The "data" property must be of the type array');
         }
         $this->googleMapsOptions = $this->getGoogleMapsOptions();
-        $this->infoWindowOptions = $this->getInfoWindowOptions();
         $this->googleMapsUrlOptions = $this->getGoogleMapsUrlOptions();
     }
 
@@ -136,12 +93,15 @@ class GoogleMaps extends Widget
      */
     public function run()
     {
-        if (empty($this->locations) && $this->renderEmptyMap === false) {
+        if (empty($this->data) && $this->renderEmptyMap === false) {
             return;
         }
-        $this->geocodeData = $this->getGeoCodeData();
+
         echo Html::beginTag('div', ['id' => $this->getId(), 'style' => "height: {$this->wrapperHeight}"]);
-        echo Html::tag('div', '', ['id' => $this->containerId]);
+        echo Html::tag('div', '', [
+            'id' => $this->containerId,
+            'class' => 'gmap3'
+        ]);
         echo Html::endTag('div');
         $this->registerAssets();
         parent::run();
@@ -153,28 +113,21 @@ class GoogleMaps extends Widget
     protected function registerAssets()
     {
         $view = $this->getView();
-        $bundle = GoogleMapsAsset::register($view);
-        $this->markerClustererOptions['imagePath'] = $bundle->baseUrl.'/images/m';
+        GoogleMapsAsset::register($view);
+        Gmap3Asset::register($view);
         $view->registerJsFile($this->getGoogleMapsApiUrl(), ['position' => View::POS_HEAD]);
-        $options = $this->getClientOptions();
-        $view->registerJs("yii.googleMapManager.initModule({$options})", $view::POS_END, 'google-api-js');
-    }
 
-    /**
-     * Get place urls and htmlContent
-     * @return string
-     */
-    protected function getGeoCodeData()
-    {
-        $result = [];
-        foreach ($this->locations as $data) {
-            $result[] = [
-                'open' => ArrayHelper::getValue($data, 'open'),
-                'position' => implode(',', ArrayHelper::getValue($data, 'position')),
-                'htmlContent' => ArrayHelper::getValue($data, 'htmlContent'),
-            ];
-        }
-        return $result;
+        $id = $this->containerId;
+        $options = Json::encode($this->googleMapsOptions);
+        $data = Json::encode($this->data);
+
+        /**
+         * https://github.com/jbdemonte/gmap3/issues/123
+         * https://github.com/jbdemonte/gmap3/issues/108
+         */
+
+        $view->registerJs("multiMarker($id, $options, $data);", $view::POS_END);
+
     }
 
     /**
@@ -207,45 +160,16 @@ class GoogleMaps extends Widget
      */
     protected function getGoogleMapsOptions()
     {
-        if (isset(Yii::$app->params['googleMapsOptions']) && empty($this->googleMapsOptions)) {
-            $this->googleMapsOptions = Yii::$app->params['googleMapsOptions'];
+        if (isset(Yii::$app->params['googleMapsOptions'])) {
+            $googleMapsOptions = Yii::$app->params['googleMapsOptions'];
+        } else {
+            $googleMapsOptions = [];
         }
-        return ArrayHelper::merge([
+
+        return ArrayHelper::merge($googleMapsOptions, [
             'mapTypeId' => 'roadmap',
-            'tilt' => 45,
-            'zoom' => 2,
+            'center' => [46.578498, 2.457275],
+            'zoom' => 15,
         ], $this->googleMapsOptions);
-    }
-
-    /**
-     * Get info window options
-     * @return array
-     */
-    protected function getInfoWindowOptions()
-    {
-        if (isset(Yii::$app->params['infoWindowOptions']) && empty($this->infoWindowOptions)) {
-            $this->infoWindowOptions = Yii::$app->params['infoWindowOptions'];
-        }
-        return ArrayHelper::merge([
-            'content' => '',
-            'maxWidth' => 350,
-        ], $this->infoWindowOptions);
-    }
-
-    /**
-     * Get google map client options
-     * @return string
-     */
-    protected function getClientOptions()
-    {
-        return Json::encode([
-            'geocodeData' => $this->geocodeData,
-            'mapOptions' => $this->googleMapsOptions,
-            'listeners' => $this->googleMapsListeners,
-            'containerId' => $this->containerId,
-            'renderEmptyMap' => $this->renderEmptyMap,
-            'infoWindowOptions' => $this->infoWindowOptions,
-            'markerClustererOptions' => $this->markerClustererOptions,
-        ]);
     }
 }

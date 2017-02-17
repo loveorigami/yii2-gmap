@@ -29,17 +29,15 @@ To use GoogleMaps, you need to configure its [[locations]] property. For example
 
 ```php
 echo lo\widgets\gmap\GoogleMaps::widget([
-	'locations' => [
 		[
 			'position' => [$model->lat, $model->lng],
 			'open' => true,
-			'htmlContent' => $model->name,
+			'content' => $model->name,
 		],
 		[
 			'position' => [45.143400, -5.372400],
-			'htmlContent' => 'My Marker',
+			'content' => 'My Marker',
 		]
-	]
 ]);
 ```
 

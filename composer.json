@@ -17,8 +17,7 @@
     }
   ],
   "require": {
-    "yiisoft/yii2": "2.*",
-    "bower-asset/gmap3": "7.2.*"
+    "bower-asset/gmap3": "~7.2.0"
   },
   "autoload": {
     "psr-4": {

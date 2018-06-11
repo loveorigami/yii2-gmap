@@ -14,6 +14,11 @@ use yii\helpers\ArrayHelper;
 trait MapTrait
 {
     /**
+     * @var height wrapper map
+     */
+    public $wrapperHeight = '500px';
+
+    /**
      * @var array wrapper map options
      */
     public $wrapperOptions = [];
@@ -56,7 +61,8 @@ trait MapTrait
             $this->wrapperOptions['id'] = $this->id;
         }
         if (!isset($this->wrapperOptions['style'])) {
-            $this->wrapperOptions['style'] = 'width: 100%; height: 500px;';
+            $height = $this->wrapperHeight;
+            $this->wrapperOptions['style'] = "width: 100%; height: $height;";
         }
     }
 

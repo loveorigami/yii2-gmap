@@ -32,6 +32,12 @@ class SelectMapLocationWidget extends InputWidget
     use MapTrait;
 
     /**
+     * @var string the prefix to the automatically generated widget IDs.
+     * @see getId()
+     */
+    public static $autoIdPrefix = 'smw';
+
+    /**
      * @var string latitude attribute name
      */
     public $attributeLatitude;

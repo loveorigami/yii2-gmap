@@ -28,6 +28,12 @@ class MarkersWidget extends Widget
     use MapTrait;
 
     /**
+     * @var string the prefix to the automatically generated widget IDs.
+     * @see getId()
+     */
+    public static $autoIdPrefix = 'gmw';
+
+    /**
      * @var array data locations
      */
     public $data = [];

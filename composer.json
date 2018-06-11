@@ -21,7 +21,7 @@
   },
   "autoload": {
     "psr-4": {
-      "lo\\widgets\\gmap\\": ""
+      "lo\\widgets\\gmap\\": "/src"
     }
   }
 }

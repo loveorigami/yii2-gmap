@@ -9,7 +9,7 @@ use yii\web\AssetBundle;
  * @package modules\base\widgets\gmap
  * @author Lukyanov Andrey <loveorigami@mail.ru>
  */
-class GoogleMapsAsset extends AssetBundle
+class MarkersAsset extends AssetBundle
 {
     /**
      * @var array

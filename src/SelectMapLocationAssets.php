@@ -4,8 +4,8 @@ namespace lo\widgets\gmap;
 use yii\web\AssetBundle;
 
 /**
- * Class GoogleMapAssets
- * @package lo\core\widgets\gmap
+ * Class SelectMapLocationAssets
+ * @package lo\widgets\gmap
  * @author Lukyanov Andrey <loveorigami@mail.ru>
  */
 class SelectMapLocationAssets extends AssetBundle

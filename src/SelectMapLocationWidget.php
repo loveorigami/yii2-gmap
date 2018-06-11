@@ -10,8 +10,8 @@ use yii\web\JsExpression;
 use yii\widgets\InputWidget;
 
 /**
- * Class GoogleMapWidget
- * @package lo\core\widgets\gamap
+ * Class SelectMapLocationWidget
+ * @package lo\core\widgets\gmap
  * @author Lukyanov Andrey <loveorigami@mail.ru>
  * add to params
  * ----------------

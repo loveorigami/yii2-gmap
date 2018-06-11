@@ -5,8 +5,8 @@ namespace lo\widgets\gmap;
 use yii\web\AssetBundle;
 
 /**
- * Class GoogleMapsAsset
- * @package modules\base\widgets\gmap
+ * Class MarkersAsset
+ * @package lo\widgets\gmap
  * @author Lukyanov Andrey <loveorigami@mail.ru>
  */
 class MarkersAsset extends AssetBundle

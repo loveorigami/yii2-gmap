@@ -1,5 +1,5 @@
 {
-  "name": "loveorigami/yii2-gmap-markers",
+  "name": "loveorigami/yii2-gmap",
   "description": "GoogleMaps Widget displays a set of user addresses as markers on the map.",
   "type": "yii2-extension",
   "keywords": [

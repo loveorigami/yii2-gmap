@@ -41,6 +41,7 @@ class MarkersWidget extends Widget
         if (is_array($this->data) === false) {
             throw new InvalidConfigException('The "data" property must be of the type array');
         }
+        $this->getWrapperOptions();
     }
 
     /**

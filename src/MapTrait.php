@@ -81,7 +81,8 @@ trait MapTrait
         }
         return ArrayHelper::merge($this->googleMapsUrlOptions, array_filter([
             'key' => null,
-            'libraries' => null,
+            'libraries' => 'places',
+            'sensor' => true,
         ]));
     }
 

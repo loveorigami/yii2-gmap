@@ -62,6 +62,15 @@ class SelectMapLocationWidget extends InputWidget
     public $renderWidgetMap;
 
     /**
+     * Init widget
+     */
+    public function init()
+    {
+        parent::init();
+        $this->getWrapperOptions();
+    }
+
+    /**
      * Run widget
      */
     public function run()

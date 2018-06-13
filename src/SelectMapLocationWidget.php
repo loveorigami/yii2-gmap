@@ -40,12 +40,12 @@ class SelectMapLocationWidget extends InputWidget
     /**
      * @var string latitude attribute name
      */
-    public $attributeLatitude;
+    public $attributeLatitude = "lat";
 
     /**
      * @var string longitude attribute name
      */
-    public $attributeLongitude;
+    public $attributeLongitude = "lng";
 
     /**
      * @var boolean marker draggable option

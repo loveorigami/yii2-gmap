@@ -19,6 +19,11 @@ trait MapTrait
     public $wrapperOptions = [];
 
     /**
+     * @var string
+     */
+    public $wrapperHeight = '300px';
+
+    /**
      * @var string google maps url
      */
     public $googleMapsUrl = 'https://maps.googleapis.com/maps/api/js?';
@@ -51,12 +56,13 @@ trait MapTrait
     /**
      * Wrapper options
      */
-    protected function getWrapperOptions(){
+    protected function getWrapperOptions()
+    {
         if (!isset($this->wrapperOptions['id'])) {
             $this->wrapperOptions['id'] = $this->id;
         }
         if (!isset($this->wrapperOptions['style'])) {
-            $this->wrapperOptions['style'] = 'width: 100%; height: 500px;';
+            $this->wrapperOptions['style'] = 'width: 100%; height: ' . $this->wrapperHeight . ';';
         }
     }
 

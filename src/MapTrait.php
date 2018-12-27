@@ -106,7 +106,6 @@ trait MapTrait
 
         return ArrayHelper::merge($googleMapsOptions, [
             'mapTypeId' => 'roadmap',
-            'center' => [46.578498, 2.457275],
             'zoom' => 15,
         ], $this->googleMapsOptions);
     }

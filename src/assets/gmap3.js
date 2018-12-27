@@ -51,7 +51,7 @@ function multiMarker(id, options, markersArray) {
             var infowindow = this.get(1);
             var markers = cluster.markers();
             markers.forEach(function (item, i) {
-                if (map.center.lng() == item.position.lng()) {
+                if (map.center.lng() === item.position.lng()) {
                     infowindow[i].open(map, item);
                 }
                 item.addListener('click', function () {

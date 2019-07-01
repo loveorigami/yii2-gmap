@@ -60,12 +60,12 @@ class MarkersWidget extends Widget
         }
 
         echo Html::beginTag('div', [
-            'id' => $this->getId(),
-            'style' => $this->wrapperOptions['style']
+            'id' => $this->getId() . 'w',
+            'style' => $this->wrapperOptions['style'],
         ]);
         echo Html::tag('div', '', [
             'id' => $this->wrapperOptions['id'],
-            'class' => 'gmap3'
+            'class' => 'gmap3',
         ]);
         echo Html::endTag('div');
         $this->registerAssets();

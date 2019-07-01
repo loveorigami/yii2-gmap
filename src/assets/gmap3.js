@@ -18,6 +18,29 @@ function multiMarker(id, options, markersArray) {
     });
 
     $(id).gmap3(options)
+        // because previous doesn't return anything, "then" still get the previous result which is the map
+        .then(function (map) {
+            google.maps.event.addListener(map, "zoom_changed", function () {
+                localStorage.mapZoom = map.getZoom();
+            });
+
+            if (localStorage.mapZoom != null) {
+                map.setZoom(parseInt(localStorage.mapZoom));
+            }
+        })
+        .then(function (map) {
+            google.maps.event.addListener(map, "center_changed", function () {
+                //Set local storage variables.
+                mapCentre = map.getCenter();
+
+                localStorage.mapLat = mapCentre.lat();
+                localStorage.mapLng = mapCentre.lng();
+            });
+
+            if (localStorage.mapLat != null && localStorage.mapLng != null) {
+                map.setCenter(new google.maps.LatLng(localStorage.mapLat, localStorage.mapLng));
+            }
+        })
         .infowindow(markers)
         .cluster({
             size: 200,

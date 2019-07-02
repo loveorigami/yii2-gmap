@@ -6,10 +6,12 @@
 function multiMarker(id, options, markersArray) {
 
     var markers = [];
+    var isOpen = false;
 
     $.each(markersArray, function (key, val) {
         if (val.open) {
             options.center = val.position;
+            isOpen = true;
         }
         markers.push({
             position: val.position,
@@ -29,6 +31,7 @@ function multiMarker(id, options, markersArray) {
             }
         })
         .then(function (map) {
+            //alert(isOpen);
             google.maps.event.addListener(map, "center_changed", function () {
                 //Set local storage variables.
                 mapCentre = map.getCenter();
@@ -37,7 +40,7 @@ function multiMarker(id, options, markersArray) {
                 localStorage.mapLng = mapCentre.lng();
             });
 
-            if (localStorage.mapLat != null && localStorage.mapLng != null) {
+            if (localStorage.mapLat != null && localStorage.mapLng != null && !isOpen) {
                 map.setCenter(new google.maps.LatLng(localStorage.mapLat, localStorage.mapLng));
             }
         })

@@ -7,6 +7,10 @@ function multiMarker(id, options, markersArray) {
 
     var markers = [];
     var isOpen = false;
+    var pref = id.id;
+    var mapZoom = pref + '-mapZoom';
+    var mapLat = pref + '-mapLat';
+    var mapLng = pref + '-mapLng';
 
     $.each(markersArray, function (key, val) {
         if (val.open) {
@@ -20,28 +24,26 @@ function multiMarker(id, options, markersArray) {
     });
 
     $(id).gmap3(options)
-        // because previous doesn't return anything, "then" still get the previous result which is the map
         .then(function (map) {
             google.maps.event.addListener(map, "zoom_changed", function () {
-                localStorage.mapZoom = map.getZoom();
+                localStorage.setItem(mapZoom, map.getZoom());
             });
 
-            if (localStorage.mapZoom != null) {
-                map.setZoom(parseInt(localStorage.mapZoom));
+            if (localStorage.getItem(mapZoom) != null) {
+                map.setZoom(parseInt(localStorage.getItem(mapZoom)));
             }
         })
         .then(function (map) {
-            //alert(isOpen);
             google.maps.event.addListener(map, "center_changed", function () {
                 //Set local storage variables.
                 mapCentre = map.getCenter();
 
-                localStorage.mapLat = mapCentre.lat();
-                localStorage.mapLng = mapCentre.lng();
+                localStorage.setItem(mapLat, mapCentre.lat());
+                localStorage.setItem(mapLng, mapCentre.lng());
             });
 
-            if (localStorage.mapLat != null && localStorage.mapLng != null && !isOpen) {
-                map.setCenter(new google.maps.LatLng(localStorage.mapLat, localStorage.mapLng));
+            if (localStorage.getItem(mapLat) != null && localStorage.getItem(mapLng) != null && !isOpen) {
+                map.setCenter(new google.maps.LatLng(localStorage.getItem(mapLat), localStorage.getItem(mapLng)));
             }
         })
         .infowindow(markers)
